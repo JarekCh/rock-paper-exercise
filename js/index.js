@@ -1,90 +1,91 @@
 // index.js
-// TODO : code review, check passing output from one func to another, add comments to func
 
-
-let playerSelection = null;
 let computerSelection = null;
-let result = null;
+let playerWins = 0;
+let computerWins = 0; 
 
 function computerPlay() {
-    const computerMove = ["paper","scizor","rock"]
+    const computerMove = ["paper","scissor","rock"]
     computerSelection = computerMove[Math.floor(Math.random() * computerMove.length)];
     return computerSelection;    
 }
 
-function playerPlay() {
-   playerSelection = window.prompt("Type rock, paper or scizor to play");
-   return playerSelection = playerSelection.toLowerCase();
+function computerOutput() {
+    const compOut =  document.querySelector(".compPick"); 
+    compOut.textContent = `Computer picked: ${computerSelection}`;
 }
 
-function playRound(playerSelection, computerSelection) {     
-    const resultWin = "win";
-    const resultLoose = "lose";
-    const resultTie = "tie";
+function removeTransition(e) {
+    if (e.propertyName !== 'transform') return;
+    e.target.classList.remove('pick');
+}
 
-    switch (playerSelection) {
-        case "rock":
-            if (computerSelection === "scizor") {
-                return result = resultWin;
-            } else if  (computerSelection === "paper"){
-                return result = resultLoose;          
-            } else {
-                return result = resultTie;
-            }
-        
-        case "scizor":
-            if (computerSelection === "paper") {
-                return result = resultWin;
-            } else if  (computerSelection === "rock"){
-                return result = resultLoose;           
-            } else {
-                return result = resultTie;
-            }
-        
-        case "paper":
-            if (computerSelection === "scizor") {
-                return result = resultWin;
-            } else if  (computerSelection === "rock"){
-                return result = resultLoose;             
-            } else {
-                return result = resultTie;
-            }
-    }
-} 
+function playGame(e) {    
+    const result =  document.querySelector(".gameResult"); 
+    const changeStyle = document.querySelector(`button[class="${e.target.className}"]`);  
+    const statistics =  document.querySelector(".finalStats"); 
+    const statisticsResult = statistics.textContent = `Score: Player ${playerWins}, Computer ${computerWins}.`;    
+    changeStyle.classList.add('pick');  
+    computerPlay();
+    computerOutput();       
+    
 
-
-
-function Game() {
-    let winner = 0;
-    let looser = 0;       
-
-    for (let i = 0; i < 5; i++) {        
-        playerPlay();
-        computerPlay();
-        playRound(playerSelection, computerSelection)
-        if (result === "win") {
-          ++winner;
-          console.log("Player has won round. Won count: ", winner);
-        } else if (result === "lose") {
-            ++looser;
-            console.log("Player has lost round. Lose Count: ", looser);
+    if (e.target.className === "rock pick") {
+        if (computerSelection === "scissor") {
+            result.textContent = "RESULT: You Won! Rock beats Scissor";            
+            ++playerWins;        
+            statisticsResult    
+        } else if  (computerSelection === "paper"){
+            result.textContent = "RESULT: You Lose! Paper beats Rock"; 
+            ++computerWins;     
+            statisticsResult       
         } else {
-             console.log("Tie u didn't get any ponits");
+            result.textContent = "RESULT: Rock vs Rock it's Tie";
+            statisticsResult
         }
-        if (i === 4) {
-            if (winner > looser) {
-                console.log("You won the game. With score" + winner + " wins out of 5 rounds.");
-            } else if (winner < looser) {
-                console.log("You lost the game. With score " + looser + " losess and only " + winner + " win.");
-            } else {
-                console.log("You draw with computer. You had " + winner + " wins and " + looser +" loses and " + (5-(winner+looser)) + " times draw.");
-            }
-        } 
+    } else if (e.target.className === "scissor pick") {
+        if (computerSelection === "paper") {
+            result.textContent = "RESULT: You Won! Scissor beats Paper";
+            ++playerWins;
+            statisticsResult
+        } else if  (computerSelection === "rock"){
+            result.textContent = "RESULT: You Lose! Rock beats Scissors";  
+            ++computerWins; 
+            statisticsResult      
+        } else {
+            result.textContent = "RESULT: Scissor vs Scissor it's Tie";
+            statisticsResult
+        }
+    } else if (e.target.className === "paper pick") {
+        if (computerSelection === "rock") {
+            result.textContent = "RESULT: You Won! Paper beats Rock";
+            ++playerWins;
+            statisticsResult  
+        } else if  (computerSelection === "scissor"){
+            result.textContent = "RESULT: You Lose! Scissors beats Paper";  
+            ++computerWins;
+            statisticsResult        
+        } else {
+            result.textContent = "RESULT: Paper vs Paper it's Tie";
+            statisticsResult
+        }     
     }
+
+    if (playerWins === 5 || computerWins === 5) {
+        statistics.textContent = `Score: Player won the game, ${playerWins} wins vs computer ${computerWins} wins. Reload page if you want another round.`; 
+        window.removeEventListener('click', playGame);
+    } else if (computerWins === 5) {
+        statistics.textContent = `Score: Computer won the game, ${computerWins} wins vs player ${playerWins} wins. Reload page if you want another round.`; 
+        window.removeEventListener('click', playGame);
+    }
+
 }
 
-computerPlay()
-Game()
+const keys = Array.from(document.querySelectorAll('button'));
+keys.forEach(key => key.addEventListener('transitionend', removeTransition));
+
+window.addEventListener('click', playGame);
+
 
 
 

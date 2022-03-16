@@ -8,5 +8,4 @@ Simple game Rock-paper as an exercise during The odin Project course.
 - HTML
 
 ## Usage
-Click link below:
-https://jarekch.github.io/rock-paper-exercise/
+Click link: https://jarekch.github.io/rock-paper-exercise/

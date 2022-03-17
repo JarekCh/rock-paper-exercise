@@ -71,7 +71,7 @@ function playGame(e) {
         }     
     }
 
-    if (playerWins === 5 || computerWins === 5) {
+    if (playerWins === 5) {
         statistics.textContent = `Score: Player won the game, ${playerWins} wins vs computer ${computerWins} wins. Reload page if you want another round.`; 
         window.removeEventListener('click', playGame);
     } else if (computerWins === 5) {
